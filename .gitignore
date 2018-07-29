@@ -6,6 +6,7 @@
 obj/
 bin/
 /.vs/CopaFilmes/v15/Server/sqlite3/db.lock
+/.vs/config/*
 *.ide
 *.ide-shm
 *.ide-wal
