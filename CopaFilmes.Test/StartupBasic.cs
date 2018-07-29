@@ -23,6 +23,8 @@ namespace CopaFilmes.Test
             Register.Configuration(container);
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
+
+            _configuration = container.GetInstance<IConfiguration>();
         }
 
     }
