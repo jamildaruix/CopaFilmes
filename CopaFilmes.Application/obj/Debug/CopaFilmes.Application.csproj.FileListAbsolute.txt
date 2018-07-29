@@ -1,0 +1,10 @@
+C:\Git\CopaFilmes\CopaFilmes.Application\bin\Debug\CopaFilmes.Application.dll
+C:\Git\CopaFilmes\CopaFilmes.Application\bin\Debug\CopaFilmes.Application.pdb
+C:\Git\CopaFilmes\CopaFilmes.Application\obj\Debug\CopaFilmes.Application.csprojResolveAssemblyReference.cache
+C:\Git\CopaFilmes\CopaFilmes.Application\obj\Debug\CopaFilmes.Application.csproj.CoreCompileInputs.cache
+C:\Git\CopaFilmes\CopaFilmes.Application\obj\Debug\CopaFilmes.Application.dll
+C:\Git\CopaFilmes\CopaFilmes.Application\obj\Debug\CopaFilmes.Application.pdb
+C:\Git\CopaFilmes\CopaFilmes.Application\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+C:\Git\CopaFilmes\CopaFilmes.Application\bin\Debug\SimpleInjector.dll
+C:\Git\CopaFilmes\CopaFilmes.Application\bin\Debug\SimpleInjector.xml
+C:\Git\CopaFilmes\CopaFilmes.Application\obj\Debug\CopaFilmes.Application.csproj.CopyComplete

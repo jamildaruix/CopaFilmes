@@ -1,0 +1,31 @@
+﻿.div-header-default {
+    height: 200px;
+    width: 1150px;
+    padding-top: 20px;
+    margin-top: 20px;
+    background: #e0e0e0;
+}
+
+    .div-header-default hr {
+        margin-left: 45%;
+        margin-right: 45%;
+        border-color: black;
+    }
+
+.div-dados-fase-selecao {
+    margin: 40px 0 0 0;
+}
+
+@media screen and (max-width: 980px) {
+    .div-header-default {
+        width: auto;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .div-header-default {
+        width: auto;
+        height: auto;
+    }
+}

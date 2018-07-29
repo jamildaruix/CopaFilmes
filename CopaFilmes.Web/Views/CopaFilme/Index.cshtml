@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="">
+    <div class="row div-header-default">
+        @Html.Partial("_PartialFaseSelecaoHeader")
+    </div>
+
+    <form class="form" method="post" id="formGerarMeuCampeonato" action="@Url.Action("ResultadoFinal","CopaFilme")">
+        <div class="row div-dados-fase-selecao">
+            <div class="col-md-2">
+                <p>Selecionados 0 de 32 filmes</p>
+            </div>
+            <div class="col-md-offset-10">
+                <input type="submit" id="btnGerarMeuCampeonato" name="btnGerarMeuCampeonato" class="btn-info" value="GERAR MEU CAMPEONATO" />
+            </div>
+        </div>
+    </form>
+</div>
