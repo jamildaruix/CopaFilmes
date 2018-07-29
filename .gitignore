@@ -2,9 +2,11 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+#Visual Studio files
+obj/
+bin/
 /.vs/CopaFilmes/v15/Server/sqlite3/db.lock
 *.ide
 *.ide-shm
 *.ide-wal
 *.suo
-*.config
