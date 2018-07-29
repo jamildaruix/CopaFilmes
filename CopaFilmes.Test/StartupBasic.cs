@@ -1,14 +1,9 @@
-﻿using CopaFilmes.Application.Recorder;
+﻿using CopaFilmes.Application.Core.MovieCup;
+using CopaFilmes.Application.Recorder;
 using CopaFilmes.Application.Service;
-using Microsoft.Practices.ServiceLocation;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace CopaFilmes.Test
@@ -16,6 +11,7 @@ namespace CopaFilmes.Test
     public class StartupBasic
     {
         protected readonly IConfiguration _configuration;
+        protected readonly IMoveCup _moveCup;
 
         public StartupBasic()
         {
@@ -24,8 +20,8 @@ namespace CopaFilmes.Test
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
 
-            _configuration = container.GetInstance<IConfiguration>();
+            this._configuration = container.GetInstance<IConfiguration>();
+            this._moveCup = container.GetInstance<IMoveCup>();
         }
-
     }
 }
