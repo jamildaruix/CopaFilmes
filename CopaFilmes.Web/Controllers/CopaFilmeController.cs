@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CopaFilmes.Application.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,17 @@ namespace CopaFilmes.Web.Controllers
 {
     public class CopaFilmeController : Controller
     {
+        protected readonly IConfiguration _configuration;
+
+        public CopaFilmeController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         [HttpGet]
         public ActionResult Index()
         {
+            var teste = _configuration.AppSettingsConfiguration("ApiCopaFilmes");
             return View();
         }
 

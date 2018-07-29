@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using CopaFilmes.Application.Recorder;
+using SimpleInjector;
+using SimpleInjector.Integration.Web.Mvc;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -12,6 +11,10 @@ namespace CopaFilmes.Web
     {
         protected void Application_Start()
         {
+            var container = new Container();
+            Register.Configuration(container);
+            DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

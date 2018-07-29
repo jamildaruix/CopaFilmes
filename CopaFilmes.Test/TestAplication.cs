@@ -10,7 +10,7 @@ namespace CopaFilmes.Test
         [TestMethod]
         public void Configuration()
         {
-            var linha = this._configuration.AppSettingsConfiguration("ApiCopaFilmes");
+            var selectedLine = this._configuration.AppSettingsConfiguration("ApiCopaFilmes");
         }
     }
 }

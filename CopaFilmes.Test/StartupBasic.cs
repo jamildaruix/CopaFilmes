@@ -1,4 +1,4 @@
-﻿using CopaFilmes.Application.Registrator;
+﻿using CopaFilmes.Application.Recorder;
 using CopaFilmes.Application.Service;
 using Microsoft.Practices.ServiceLocation;
 using SimpleInjector;

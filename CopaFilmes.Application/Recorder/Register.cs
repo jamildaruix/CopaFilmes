@@ -2,7 +2,7 @@
 using SimpleInjector;
 using Microsoft.Practices.ServiceLocation;
 
-namespace CopaFilmes.Application.Registrator
+namespace CopaFilmes.Application.Recorder
 {
     public static class Register
     {
