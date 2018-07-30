@@ -11,7 +11,7 @@ namespace CopaFilmes.Test
     public class StartupBasic
     {
         protected readonly IConfiguration _configuration;
-        protected readonly IMoveCup _moveCup;
+        protected readonly IMovieCup _movieCup;
 
         public StartupBasic()
         {
@@ -21,7 +21,7 @@ namespace CopaFilmes.Test
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
 
             this._configuration = container.GetInstance<IConfiguration>();
-            this._moveCup = container.GetInstance<IMoveCup>();
+            this._movieCup = container.GetInstance<IMovieCup>();
         }
     }
 }

@@ -16,5 +16,8 @@ namespace CopaFilmes.Application.Dominio.MovieCup
 
         [JsonProperty(PropertyName = "averageRating")]
         public decimal AverageRating { get; set; }
+
+        [JsonIgnore]
+        public bool Selected { get; set; }
     }
 }

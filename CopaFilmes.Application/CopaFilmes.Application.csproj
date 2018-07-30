@@ -50,9 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\MovieCup\IMoveCup.cs" />
-    <Compile Include="Core\MovieCup\MoveCup.cs" />
+    <Compile Include="Core\MovieCup\IMovieCup.cs" />
+    <Compile Include="Core\MovieCup\MovieCup.cs" />
     <Compile Include="Dominio\MovieCup\Movie.cs" />
+    <Compile Include="Dominio\MovieCup\PhaseGroup.cs" />
+    <Compile Include="EnumApplication\EnumPhaseType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recorder\Register.cs" />
     <Compile Include="Service\Configuration.cs" />

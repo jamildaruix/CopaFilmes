@@ -17,7 +17,7 @@ namespace CopaFilmes.Application.Recorder
         private static void ServicesConfiguration(Container container)
         {
             container.Register<IConfiguration, Configuration>(Lifestyle.Singleton);
-            container.Register<IMoveCup, MoveCup>(Lifestyle.Singleton);
+            container.Register<IMovieCup, MovieCup>(Lifestyle.Singleton);
             container.Register<IApi<Movie>, Api<Movie>>(Lifestyle.Singleton);
             container.Verify();
         }

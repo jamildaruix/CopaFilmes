@@ -1,6 +1,5 @@
-﻿using System;
-using CopaFilmes.Application.Service;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace CopaFilmes.Test
 {
@@ -22,9 +21,17 @@ namespace CopaFilmes.Test
         }
 
         [TestMethod]
-        public void GroupStage()
+        public void MoviAll()
         {
-            this._moveCup.GroupStage(_urlApi);
+            var listMovie = this._movieCup.MovieAll(_urlApi);
+            Assert.IsNotNull(listMovie, "Não possui dados na lista");
+        }
+
+        [TestMethod]
+        public void EliminationPhase()
+        {
+            var listMovie = this._movieCup.MovieAll(_urlApi).Take(16).ToList();
+            var listEliminationPhase = this._movieCup.Championship(listMovie);
         }
     }
 }
