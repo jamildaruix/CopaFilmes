@@ -1,9 +1,13 @@
-﻿namespace CopaFilmes.Application.Dominio.MovieCup
+﻿using Newtonsoft.Json;
+
+namespace CopaFilmes.Application.Dominio.MovieCup
 {
-    public class PhaseGroup
+    public class PhaseGroup : Movie
     {
-        public string PrimaryTitle { get; set; }
-        public decimal AverageRating { get; set; }
+        [JsonProperty(PropertyName = "phaseType")]
         public string PhaseType { get; set; }
+
+        [JsonProperty(PropertyName = "ranking")]
+        public int Ranking { get; set; }
     }
 }

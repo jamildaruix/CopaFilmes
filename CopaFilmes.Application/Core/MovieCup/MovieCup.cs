@@ -4,6 +4,7 @@ using CopaFilmes.Application.Useful;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CopaFilmes.Application.Core.MovieCup
 {
@@ -22,7 +23,9 @@ namespace CopaFilmes.Application.Core.MovieCup
         public IEnumerable<Movie> Championship(IList<Movie> selectedList)
         {
             var pharse = this.Phase(selectedList).ToList();
-            this.PhaseElimination(pharse);
+            var quarterFinals = this.QuarterFinals(pharse).ToList();
+            var semiFinal = this.SemiFinal(quarterFinals).ToList();
+            var final = this.Final(semiFinal).ToList();
             return null;
         }
 
@@ -44,6 +47,7 @@ namespace CopaFilmes.Application.Core.MovieCup
 
             do
             {
+                int ranking = 0;
                 var group = selectedList.Where(w => w.Selected == false).OrderBy(o => o.PrimaryTitle).Take(4);
                 ++stepPhase;
                 string phaseType = DescriptionPhaseType((EnumPhaseType)stepPhase);
@@ -55,7 +59,8 @@ namespace CopaFilmes.Application.Core.MovieCup
                     {
                         AverageRating = item.AverageRating,
                         PrimaryTitle = item.PrimaryTitle,
-                        PhaseType = phaseType
+                        PhaseType = phaseType,
+                        Ranking = ++ranking
                     });
                 }
             } while (selectedList.Where(w => w.Selected == false).Any());
@@ -63,21 +68,182 @@ namespace CopaFilmes.Application.Core.MovieCup
             return phaseGroup;
         }
 
-        private IEnumerable<PhaseGroup> PhaseElimination(IList<PhaseGroup> selectedList, EnumPhaseType enumPhaseType = EnumPhaseType.QUARTAS_FINAIS)
+        /// <summary>
+        /// Quartas de Finais
+        /// </summary>
+        private IEnumerable<PhaseClassified> QuarterFinals(IList<PhaseGroup> selectedList)
         {
-            //var selectGroupPhaseElimination = (from selected in selectedList
-            //                              group selected by selected.PhaseType
-            //                              into eGroup
-            //                              select eGroup);
+            List<PhaseClassified> phaseClassifieds = new List<PhaseClassified>(4);
 
-            //var groups = selectedList.ToLookup(p => p.PhaseType);
+            var groupOneTeam = selectedList.Where(w => w.Ranking == 1).ToArray();
+            var groupTwoTeam = selectedList.Where(w => w.Ranking == 2).ToArray();
+            int oneTeam, twoTeam;
 
-            //foreach (var item in groups)
-            //{
-            //    var novo = item.OrderByDescending(o => o.AverageRating).Take(takeStep);
-            //}
+            for (int i = 0; i <= 1; i++)
+            {
+                oneTeam = (i == 0) ? 0 : 1;
+                twoTeam = (i == 0) ? 1 : 0;
+                phaseClassifieds.Add(this.StagePhase(groupOneTeam[oneTeam], groupTwoTeam[twoTeam], i));
+            }
 
-            return null;
+            for (int i = 2; i <= 3; i++)
+            {
+                oneTeam = (i == 2) ? 2 : 3;
+                twoTeam = (i == 2) ? 3 : 2;
+                phaseClassifieds.Add(this.StagePhase(groupOneTeam[oneTeam], groupTwoTeam[twoTeam], i));
+            }
+
+            return phaseClassifieds;
+        }
+
+        /// <summary>
+        /// Montar as quartas de finais fases das qualificações
+        /// </summary>
+        private PhaseClassified StagePhase(PhaseGroup teamFirst, PhaseGroup teamSecond, int positionPhaseType)
+        {
+            PhaseClassified phaseClassified = new PhaseClassified();
+            phaseClassified.TeamOne = teamFirst.PrimaryTitle;
+            phaseClassified.AverageRatingOne = teamFirst.AverageRating;
+            phaseClassified.TeamTwo = teamSecond.PrimaryTitle;
+            phaseClassified.AverageRatingTwo = teamSecond.AverageRating;
+            phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.QUARTAS_FINAIS);
+            phaseClassified.PositionPhaseType = ++positionPhaseType;
+            return phaseClassified;
+        }
+
+        /// <summary>
+        /// Método para efetuar a semi final
+        /// </summary>
+        private IEnumerable<PhaseClassified> SemiFinal(IList<PhaseClassified> selectedList)
+        {
+            List<PhaseClassified> phaseClassifieds = new List<PhaseClassified>(2);
+            PhaseClassified phaseClassified = new PhaseClassified();
+            bool teamOne = true;
+
+            for (int i = 0; i <= 1; i++)
+            {
+                var tupleTeamClassified = TeamClassified(selectedList[i]);
+                if (teamOne)
+                {
+                    phaseClassified.TeamOne = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingOne = tupleTeamClassified.Item2;
+                    phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.SEMIFINAL);
+                    phaseClassified.PositionPhaseType = 1;
+                    teamOne = false;
+                }
+                else
+                {
+                    phaseClassified.TeamTwo = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingTwo = tupleTeamClassified.Item2;
+                }
+            }
+
+            teamOne = true;
+            phaseClassifieds.Add(phaseClassified);
+            phaseClassified = new PhaseClassified();
+
+            for (int i = 2; i <= 3; i++)
+            {
+                var tupleTeamClassified = TeamClassified(selectedList[i]);
+                if (teamOne)
+                {
+                    phaseClassified.TeamOne = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingOne = tupleTeamClassified.Item2;
+                    phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.SEMIFINAL);
+                    phaseClassified.PositionPhaseType = 2;
+                    teamOne = false;
+                }
+                else
+                {
+                    phaseClassified.TeamTwo = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingTwo = tupleTeamClassified.Item2;
+                }
+            }
+
+            phaseClassifieds.Add(phaseClassified);
+            return phaseClassifieds;
+        }
+
+        /// <summary>
+        /// Final devolve o campeao, o segundo lugar, o terceiro e o quarto lugar
+        /// </summary>
+        private IEnumerable<PhaseClassified> Final(IList<PhaseClassified> selectedList)
+        {
+            List<PhaseClassified> phaseClassifieds = new List<PhaseClassified>(2);
+            PhaseClassified phaseClassified = new PhaseClassified();
+            bool teamOne = true;
+
+            for (int i = 0; i <= 1; i++)
+            {
+                var tupleTeamClassified = TeamClassified(selectedList[i]);
+                if (teamOne)
+                {
+                    phaseClassified.TeamOne = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingOne = tupleTeamClassified.Item2;
+                    phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.SEMIFINAL);
+                    phaseClassified.PositionPhaseType = 1;
+                    teamOne = false;
+                }
+                else
+                {
+                    phaseClassified.TeamTwo = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingTwo = tupleTeamClassified.Item2;
+                }
+            }
+
+            teamOne = true;
+            phaseClassifieds.Add(phaseClassified);
+            phaseClassified = new PhaseClassified();
+
+            for (int i = 2; i <= 3; i++)
+            {
+                var tupleTeamClassified = TeamClassified(selectedList[i]);
+                if (teamOne)
+                {
+                    phaseClassified.TeamOne = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingOne = tupleTeamClassified.Item2;
+                    phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.SEMIFINAL);
+                    phaseClassified.PositionPhaseType = 2;
+                    teamOne = false;
+                }
+                else
+                {
+                    phaseClassified.TeamTwo = tupleTeamClassified.Item1;
+                    phaseClassified.AverageRatingTwo = tupleTeamClassified.Item2;
+                }
+            }
+
+            phaseClassifieds.Add(phaseClassified);
+            return phaseClassifieds;
+        }
+
+
+        /// <summary>
+        /// Classificação dos times para SemiFinal
+        /// </summary>
+        private Tuple<string, decimal> TeamClassified(PhaseClassified classified)
+        {
+            Tuple<string, decimal> tupleClassified = null;
+            int timeClassified = decimal.Compare(classified.AverageRatingOne, classified.AverageRatingTwo);
+
+            switch (timeClassified)
+            {
+                case 1:
+                    tupleClassified = new Tuple<string, decimal>(classified.TeamOne, classified.AverageRatingOne);
+                    break;
+                case 0:
+                    List<string> nameFilmeOrder = new List<string>(2);
+                    nameFilmeOrder.Add(classified.TeamOne);
+                    nameFilmeOrder.Add(classified.TeamTwo);
+                    nameFilmeOrder.Sort();
+                    tupleClassified = new Tuple<string, decimal>(nameFilmeOrder[0] , classified.AverageRatingOne);
+                    break;
+                case -1:
+                    tupleClassified = new Tuple<string, decimal>(classified.TeamTwo, classified.AverageRatingOne);
+                    break;
+            }
+
+            return tupleClassified;
         }
 
         /// <summary>

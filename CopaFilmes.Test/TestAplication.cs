@@ -20,6 +20,9 @@ namespace CopaFilmes.Test
             var selectedLine = this._configuration.AppSettingsConfiguration("ApiCopaFilmes");
         }
 
+        /// <summary>
+        /// Método para consumir a API e retornar os 64 itens
+        /// </summary>
         [TestMethod]
         public void MoviAll()
         {
@@ -27,11 +30,30 @@ namespace CopaFilmes.Test
             Assert.IsNotNull(listMovie, "Não possui dados na lista");
         }
 
+        /// <summary>
+        /// Método para efetuar o teste da copa filmes
+        /// </summary>
         [TestMethod]
         public void EliminationPhase()
         {
             var listMovie = this._movieCup.MovieAll(_urlApi).Take(16).ToList();
             var listEliminationPhase = this._movieCup.Championship(listMovie);
+        }
+
+        /// <summary>
+        /// Método para verificar se existe nota iguais
+        /// </summary>
+        [TestMethod]
+        public void EliminationPhaseEqualsAverageRating()
+        {
+            var listMovie = this._movieCup.MovieAll(_urlApi).ToList();
+
+            foreach (var item in listMovie)
+            {
+                item.AverageRating = 5M;
+            }
+            
+            var listEliminationPhase = this._movieCup.Championship(listMovie.Take(16).ToList());
         }
     }
 }

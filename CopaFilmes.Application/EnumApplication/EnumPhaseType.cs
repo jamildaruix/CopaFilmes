@@ -13,7 +13,7 @@ namespace CopaFilmes.Application.EnumApplication
         GRUPO_C = 3,
         GRUPO_D = 4,
         QUARTAS_FINAIS = 5,
-        SEMIFINAIS = 6,
+        SEMIFINAL = 6,
         TERCEIRO_LUGAR = 7,
         FINAL = 8
     }
