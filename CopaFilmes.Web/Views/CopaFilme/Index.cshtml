@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<CopaFilmes.Web.Models.Movie.MovieView>
+
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -17,5 +19,23 @@
                 <input type="submit" id="btnGerarMeuCampeonato" name="btnGerarMeuCampeonato" class="btn-info" value="GERAR MEU CAMPEONATO" />
             </div>
         </div>
+
+        @if (Model != null)
+        {
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="row">
+                        <div class="col-md-3">
+                            @*@Html.CheckBoxFor(item.Id, item.PrimaryTitle)*@
+                            @Html.CheckBoxFor(m => item.Id )
+                            @Html.TextBox(item.Year)
+                            @Html.Hidden(item.AverageRating)
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
     </form>
 </div>

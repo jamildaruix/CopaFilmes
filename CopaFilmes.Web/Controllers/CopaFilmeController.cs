@@ -1,4 +1,8 @@
-﻿using CopaFilmes.Application.Service;
+﻿using AutoMapper;
+using CopaFilmes.Application.Core.MovieCup;
+using CopaFilmes.Application.Dominio.MovieCup;
+using CopaFilmes.Application.Service;
+using CopaFilmes.Web.Models.Movie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +13,22 @@ namespace CopaFilmes.Web.Controllers
 {
     public class CopaFilmeController : Controller
     {
-        protected readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
+        private readonly IMovieCup _movieCup;
 
-        public CopaFilmeController(IConfiguration configuration)
+        public CopaFilmeController(IConfiguration configuration, IMovieCup movieCup)
         {
-            _configuration = configuration;
+            this._configuration = configuration;
+            this._movieCup = movieCup;
         }
 
         [HttpGet]
         public ActionResult Index()
         {
-            var teste = _configuration.AppSettingsConfiguration("ApiCopaFilmes");
-            return View();
+            string apiUrl = _configuration.AppSettingsConfiguration("ApiCopaFilmes");
+            var listMovie = this._movieCup.MovieAll(apiUrl);
+            var listMovieView = Mapper.Map<IEnumerable<Movie>, IEnumerable<MovieView>>(listMovie);
+            return View(listMovieView);
         }
 
         [HttpGet]

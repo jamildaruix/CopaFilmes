@@ -1,4 +1,5 @@
 ﻿using CopaFilmes.Application.Recorder;
+using CopaFilmes.Web.AutoMapper;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using System.Web.Mvc;
@@ -19,6 +20,7 @@ namespace CopaFilmes.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AutoMapperConfig.RegisterMappings();
         }
     }
 }

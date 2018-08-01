@@ -1,6 +1,7 @@
 ﻿using CopaFilmes.Application.Dominio.MovieCup;
 using CopaFilmes.Application.EnumApplication;
 using CopaFilmes.Application.Useful;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,17 @@ namespace CopaFilmes.Application.Core.MovieCup
         /// <summary>
         /// Monta todas as fases do campeotanto
         /// </summary>
-        public IEnumerable<Movie> Championship(IList<Movie> selectedList)
+        public LeagueInfo Championship(IList<Movie> selectedList)
         {
-            var pharse = this.Phase(selectedList).ToList();
-            var quarterFinals = this.QuarterFinals(pharse).ToList();
-            var semiFinal = this.SemiFinal(quarterFinals).ToList();
-            var final = this.Final(semiFinal).ToList();
-            return null;
+            LeagueInfo leagueInfo = new LeagueInfo();
+            leagueInfo.PhaseGroups = this.Phase(selectedList).ToList();
+            leagueInfo.QuarterFinalsGroups = this.QuarterFinals(leagueInfo.PhaseGroups).ToList();
+            leagueInfo.SemiFinalGroups = this.SemiFinal(leagueInfo.QuarterFinalsGroups).ToList();
+            leagueInfo.FinalGroups = this.Final(leagueInfo.SemiFinalGroups).ToList();
+
+            leagueInfo = this.Information(leagueInfo);
+
+            return leagueInfo;
         }
 
         /// <summary>
@@ -165,12 +170,13 @@ namespace CopaFilmes.Application.Core.MovieCup
         }
 
         /// <summary>
-        /// Final devolve o campeao, o segundo lugar, o terceiro e o quarto lugar
+        /// Final campo e Terciero lugar
         /// </summary>
         private IEnumerable<PhaseClassified> Final(IList<PhaseClassified> selectedList)
         {
             List<PhaseClassified> phaseClassifieds = new List<PhaseClassified>(2);
             PhaseClassified phaseClassified = new PhaseClassified();
+            PhaseClassified phaseClassifiedThirdPlace = new PhaseClassified();
             bool teamOne = true;
 
             for (int i = 0; i <= 1; i++)
@@ -180,43 +186,36 @@ namespace CopaFilmes.Application.Core.MovieCup
                 {
                     phaseClassified.TeamOne = tupleTeamClassified.Item1;
                     phaseClassified.AverageRatingOne = tupleTeamClassified.Item2;
-                    phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.SEMIFINAL);
+                    phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.FINAL);
                     phaseClassified.PositionPhaseType = 1;
+
+                    phaseClassifiedThirdPlace.TeamOne = (tupleTeamClassified.Item1 == selectedList[i].TeamOne) ? selectedList[i].TeamTwo : selectedList[i].TeamOne;
+                    phaseClassifiedThirdPlace.AverageRatingOne = (tupleTeamClassified.Item1 == selectedList[i].TeamOne) ? selectedList[i].AverageRatingTwo : selectedList[i].AverageRatingOne;
+                    phaseClassifiedThirdPlace.PhaseType = DescriptionPhaseType(EnumPhaseType.TERCEIRO_LUGAR);
+                    phaseClassifiedThirdPlace.PositionPhaseType = 1;
+
                     teamOne = false;
                 }
                 else
                 {
                     phaseClassified.TeamTwo = tupleTeamClassified.Item1;
                     phaseClassified.AverageRatingTwo = tupleTeamClassified.Item2;
-                }
-            }
 
-            teamOne = true;
-            phaseClassifieds.Add(phaseClassified);
-            phaseClassified = new PhaseClassified();
-
-            for (int i = 2; i <= 3; i++)
-            {
-                var tupleTeamClassified = TeamClassified(selectedList[i]);
-                if (teamOne)
-                {
-                    phaseClassified.TeamOne = tupleTeamClassified.Item1;
-                    phaseClassified.AverageRatingOne = tupleTeamClassified.Item2;
-                    phaseClassified.PhaseType = DescriptionPhaseType(EnumPhaseType.SEMIFINAL);
-                    phaseClassified.PositionPhaseType = 2;
-                    teamOne = false;
-                }
-                else
-                {
-                    phaseClassified.TeamTwo = tupleTeamClassified.Item1;
-                    phaseClassified.AverageRatingTwo = tupleTeamClassified.Item2;
+                    phaseClassifiedThirdPlace.TeamTwo = (tupleTeamClassified.Item1 == selectedList[i].TeamOne) ? selectedList[i].TeamTwo : selectedList[i].TeamOne;
+                    phaseClassifiedThirdPlace.AverageRatingTwo = (tupleTeamClassified.Item1 == selectedList[i].TeamOne) ? selectedList[i].AverageRatingTwo : selectedList[i].AverageRatingOne;
                 }
             }
 
             phaseClassifieds.Add(phaseClassified);
+            phaseClassifieds.Add(phaseClassifiedThirdPlace);
+
             return phaseClassifieds;
         }
 
+        private LeagueInfo Information(LeagueInfo leagueInfo)
+        {
+            return leagueInfo;
+        }
 
         /// <summary>
         /// Classificação dos times para SemiFinal
