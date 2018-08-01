@@ -1,6 +1,7 @@
 ﻿using CopaFilmes.Application.Dominio.MovieCup;
 using CopaFilmes.Application.EnumApplication;
 using CopaFilmes.Application.Useful;
+using Newtonsoft.Json;
 using Polly;
 using System;
 using System.Collections.Generic;
@@ -212,8 +213,26 @@ namespace CopaFilmes.Application.Core.MovieCup
             return phaseClassifieds;
         }
 
+        /// <summary>
+        /// Retorna os dados do campeonato
+        /// </summary>
         private LeagueInfo Information(LeagueInfo leagueInfo)
         {
+            var final = leagueInfo.FinalGroups.Where(w => w.PhaseType == DescriptionPhaseType(EnumPhaseType.FINAL)).SingleOrDefault();
+            var firstTuple = this.TeamClassified(final);
+            var secondText = (firstTuple.Item1 == final.TeamOne) ? final.TeamTwo : final.TeamOne;
+            var thirdTuple = this.TeamClassified(leagueInfo.FinalGroups.Where(w => w.PhaseType == DescriptionPhaseType(EnumPhaseType.TERCEIRO_LUGAR)).SingleOrDefault());
+
+            KeyValuePair<int, string> first = new KeyValuePair<int, string>(1, firstTuple.Item1);
+            KeyValuePair<int, string> second = new KeyValuePair<int, string>(2, secondText);
+            KeyValuePair<int, string> third = new KeyValuePair<int, string>(3, thirdTuple.Item1);
+
+            leagueInfo.Champions.Add(first);
+            leagueInfo.Champions.Add(second);
+            leagueInfo.Champions.Add(third);
+
+            leagueInfo.JsonLeague = JsonConvert.SerializeObject(leagueInfo);
+
             return leagueInfo;
         }
 

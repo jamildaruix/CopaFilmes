@@ -38,6 +38,7 @@ namespace CopaFilmes.Test
         {
             var listMovie = this._movieCup.MovieAll(_urlApi).Take(16).ToList();
             var listEliminationPhase = this._movieCup.Championship(listMovie);
+            Assert.IsNotNull(listEliminationPhase, "Não possui dados na lista");
         }
 
         /// <summary>
@@ -54,6 +55,7 @@ namespace CopaFilmes.Test
             }
             
             var listEliminationPhase = this._movieCup.Championship(listMovie.Take(16).ToList());
+            Assert.IsNotNull(listEliminationPhase, "Não possui dados na lista");
         }
     }
 }
