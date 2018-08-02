@@ -10,8 +10,8 @@ namespace CopaFilmes.Web.Models.Movie
 
         public string PrimaryTitle { get; set; }
 
-        public Int16 Year { get; set; }
+        public string Year { get; set; }
 
-        public decimal AverageRating { get; set; }
+        public string AverageRating { get; set; }
     }
 }

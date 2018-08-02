@@ -9,7 +9,9 @@ namespace CopaFilmes.Web.AutoMapper
     {
         public ViewModelToDomainMappingProfile()
         {
-            CreateMap<MovieView, Movie>();
+            CreateMap<MovieView, Movie>()
+                .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.AverageRating))
+                .ForMember(dest => dest.Year, opt => opt.MapFrom(src => src.Year));
         }
     }
 }

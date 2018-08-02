@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CopaFilmes.Web.Models.Movie.MovieView>
+﻿@model IList<CopaFilmes.Web.Models.Movie.MovieView>
 
 @{
     ViewBag.Title = "Index";
@@ -12,27 +12,27 @@
 
     <form class="form" method="post" id="formGerarMeuCampeonato" action="@Url.Action("ResultadoFinal","CopaFilme")">
         <div class="row div-dados-fase-selecao">
-            <div class="col-md-2">
-                <p>Selecionados 0 de 32 filmes</p>
+            <div class="col-md-6">
+                <p>Selecionados 0 de <text id="txtCount" disabled="true">0</text> filmes</p>
             </div>
-            <div class="col-md-offset-10">
-                <input type="submit" id="btnGerarMeuCampeonato" name="btnGerarMeuCampeonato" class="btn-info" value="GERAR MEU CAMPEONATO" />
+            <div class="col-md-6">
+                <input type="submit" id="btnGerarMeuCampeonato" name="btnGerarMeuCampeonato" class="btn-info" value="GERAR MEU CAMPEONATO" hidden="hidden" />
             </div>
         </div>
 
         @if (Model != null)
         {
             <div class="row">
-                @foreach (var item in Model)
+                @for (int i = 0; i < Model.Count(); i++)
                 {
-                    <div class="row">
-                        <div class="col-md-3">
-                            @*@Html.CheckBoxFor(item.Id, item.PrimaryTitle)*@
-                            @Html.CheckBoxFor(m => item.Id )
-                            @Html.TextBox(item.Year)
-                            @Html.Hidden(item.AverageRating)
-                        </div>
-                    </div>
+                <div class="col-md-3">
+                    @Html.Hidden(Model[i].Id, Model[i].AverageRating)
+                    @Html.Hidden(Model[i].PrimaryTitle, Model[i].PrimaryTitle)
+                    @Html.Label(Model[i].PrimaryTitle, Model[i].PrimaryTitle, new { @class = "form-group" })
+                    <input type="checkbox" name="chkOption[]" class="countCheckBox" value="@Model[i].Id" />
+                    <br />
+                    @Html.Label(Model[i].Year, Model[i].Year, new { @class = "form-group" })
+                </div>
                 }
             </div>
         }
