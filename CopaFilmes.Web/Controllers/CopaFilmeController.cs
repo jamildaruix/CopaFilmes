@@ -25,16 +25,22 @@ namespace CopaFilmes.Web.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            string apiUrl = _configuration.AppSettingsConfiguration("ApiCopaFilmes");
-            var listMovie = this._movieCup.MovieAll(apiUrl);
+            string apiUrl = _configuration.AppSettingsConfiguration("ApiCup");
+            int timeoutPolicySeconds = Convert.ToInt32(_configuration.AppSettingsConfiguration("TimeoutPolicySeconds"));
+            var listMovie = this._movieCup.MovieAll(apiUrl, timeoutPolicySeconds);
             var listMovieView = Mapper.Map<IEnumerable<Movie>, IEnumerable<MovieView>>(listMovie);
             return View(listMovieView);
         }
 
-        [HttpGet]
-        public ActionResult ResultadoFinal()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResultadoFinal(IEnumerable<MovieView> model)
         {
-            return View();
+            var result = model.Where(w => w.Checked);
+            var listMovie = Mapper.Map<IEnumerable<MovieView>, IEnumerable<Movie>>(result);
+            var leagueInfo  = this._movieCup.Championship(listMovie.ToList());
+            var leagueInfoView = Mapper.Map<LeagueInfo, LeagueInfoView>(leagueInfo);
+            return View(leagueInfoView);
         }
     }
 }

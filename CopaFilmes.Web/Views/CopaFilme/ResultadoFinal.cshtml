@@ -1,11 +1,42 @@
-﻿
+﻿@model CopaFilmes.Web.Models.Movie.LeagueInfoView
+
 @{
     ViewBag.Title = "ResultadoFinal";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="">
+<div class="form-control-range">
     <div class="row div-header-default">
         @Html.Partial("_PartialFaseFinalHeader")
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <b>1°</b>
+        </div>
+        <div class="col-md-10">
+            @Html.Label(Model.First, new { @class = "form-group" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <b>2°</b>
+        </div>
+        <div class="col-md-10">
+            @Html.Label(Model.Second, new { @class = "form-group" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <b>3°</b>
+        </div>
+        <div class="col-md-10">
+            @Html.Label(Model.Third, new { @class = "form-group" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-me-12">
+            @Html.TextAreaFor(m => m.JsonLeague, new { @class = "form-group", })
+        </div>
     </div>
 </div>

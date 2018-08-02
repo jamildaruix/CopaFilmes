@@ -26,7 +26,7 @@ namespace CopaFilmes.Test
         [TestMethod]
         public void MoviAll()
         {
-            var listMovie = this._movieCup.MovieAll(_urlApi);
+            var listMovie = this._movieCup.MovieAll(_urlApi, 10);
             Assert.IsNotNull(listMovie, "Não possui dados na lista");
         }
 
@@ -36,7 +36,7 @@ namespace CopaFilmes.Test
         [TestMethod]
         public void EliminationPhase()
         {
-            var listMovie = this._movieCup.MovieAll(_urlApi).Take(16).ToList();
+            var listMovie = this._movieCup.MovieAll(_urlApi, 10).Take(16).ToList();
             var listEliminationPhase = this._movieCup.Championship(listMovie);
             Assert.IsNotNull(listEliminationPhase, "Não possui dados na lista");
         }
@@ -47,7 +47,7 @@ namespace CopaFilmes.Test
         [TestMethod]
         public void EliminationPhaseEqualsAverageRating()
         {
-            var listMovie = this._movieCup.MovieAll(_urlApi).ToList();
+            var listMovie = this._movieCup.MovieAll(_urlApi, 10).ToList();
 
             foreach (var item in listMovie)
             {

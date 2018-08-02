@@ -13,5 +13,7 @@ namespace CopaFilmes.Web.Models.Movie
         public string Year { get; set; }
 
         public string AverageRating { get; set; }
+
+        public bool Checked { get; set; }
     }
 }

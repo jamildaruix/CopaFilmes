@@ -10,7 +10,9 @@
         @Html.Partial("_PartialFaseSelecaoHeader")
     </div>
 
-    <form class="form" method="post" id="formGerarMeuCampeonato" action="@Url.Action("ResultadoFinal","CopaFilme")">
+    @using (Html.BeginForm("ResultadoFinal", "CopaFilme", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
         <div class="row div-dados-fase-selecao">
             <div class="col-md-6">
                 <p>Selecionados 0 de <text id="txtCount" disabled="true">0</text> filmes</p>
@@ -20,22 +22,36 @@
             </div>
         </div>
 
-        @if (Model != null)
+        if (Model != null)
         {
             <div class="row">
                 @for (int i = 0; i < Model.Count(); i++)
                 {
-                <div class="col-md-3">
-                    @Html.Hidden(Model[i].Id, Model[i].AverageRating)
-                    @Html.Hidden(Model[i].PrimaryTitle, Model[i].PrimaryTitle)
-                    @Html.Label(Model[i].PrimaryTitle, Model[i].PrimaryTitle, new { @class = "form-group" })
-                    <input type="checkbox" name="chkOption[]" class="countCheckBox" value="@Model[i].Id" />
-                    <br />
-                    @Html.Label(Model[i].Year, Model[i].Year, new { @class = "form-group" })
-                </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                @Html.HiddenFor(m => Model[i].Id, Model[i].Id)
+                                @Html.HiddenFor(m => Model[i].AverageRating, Model[i].AverageRating)
+                                @Html.HiddenFor(m => Model[i].PrimaryTitle, Model[i].PrimaryTitle)
+                                <div class="col-md-2">
+                                    @Html.CheckBoxFor(m => Model[i].Checked, new { @value = "True", @id = "chkOption[]", @class = "countCheckBox" })
+                                </div>
+                                <div class="col-md-10">
+                                    <blockquote class="blockquote">
+                                        <label class="mb-0" style="font-size: .8em;">
+                                            @Html.Label(Model[i].PrimaryTitle, Model[i].PrimaryTitle, new { @class = "form-group" })
+                                        </label>
+                                        <br />
+                                        <footer class="blockquote-footer">
+                                            @Html.Label(Model[i].Year, Model[i].Year, new { @class = "form-group" })
+                                        </footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 }
             </div>
         }
-
-    </form>
+    }
 </div>

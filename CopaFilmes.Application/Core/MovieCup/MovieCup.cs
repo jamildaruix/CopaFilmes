@@ -29,7 +29,6 @@ namespace CopaFilmes.Application.Core.MovieCup
             leagueInfo.QuarterFinalsGroups = this.QuarterFinals(leagueInfo.PhaseGroups).ToList();
             leagueInfo.SemiFinalGroups = this.SemiFinal(leagueInfo.QuarterFinalsGroups).ToList();
             leagueInfo.FinalGroups = this.Final(leagueInfo.SemiFinalGroups).ToList();
-
             leagueInfo = this.Information(leagueInfo);
 
             return leagueInfo;
@@ -38,9 +37,21 @@ namespace CopaFilmes.Application.Core.MovieCup
         /// <summary>
         /// Retorna todos os filmes da API
         /// </summary>
-        public IEnumerable<Movie> MovieAll(string urlApi)
+        public IEnumerable<Movie> MovieAll(string urlApi, int timeoutPolicySeconds)
         {
-            return _api.GetList(urlApi);
+            List<Movie> returns = new List<Movie>();
+            var timeoutPolicy = Policy.Timeout(10);
+            var policy = Policy.Handle<Exception>().Retry(3, (exception, retryCount) =>
+            {
+                Console.WriteLine($"Tentativa {retryCount} ... ");
+            });
+
+            policy.Wrap(timeoutPolicy).Execute(() =>
+            {
+                returns = _api.GetList(urlApi).ToList();
+            });
+
+            return returns;
         }
 
         /// <summary>
@@ -254,7 +265,7 @@ namespace CopaFilmes.Application.Core.MovieCup
                     nameFilmeOrder.Add(classified.TeamOne);
                     nameFilmeOrder.Add(classified.TeamTwo);
                     nameFilmeOrder.Sort();
-                    tupleClassified = new Tuple<string, decimal>(nameFilmeOrder[0] , classified.AverageRatingOne);
+                    tupleClassified = new Tuple<string, decimal>(nameFilmeOrder[0], classified.AverageRatingOne);
                     break;
                 case -1:
                     tupleClassified = new Tuple<string, decimal>(classified.TeamTwo, classified.AverageRatingOne);
